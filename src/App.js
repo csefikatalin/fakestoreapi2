@@ -1,36 +1,25 @@
-import { useContext } from "react";
-import TermekekPublic from "./components/public/TermekekPublic";
-import { ApiContext } from "./contexts/ApiContext";
-import Kosaram from "./components/public/Kosaram";
-import { KosarContext } from "./contexts/KosarContext";
-import TermekekAdmin from "./components/admin/TermekekAdmin";
-import UjTermek from "./components/admin/UjTermek";
 
+import Layout from "./pages/Layouts";
+import Public from "./pages/Public";
+import Admin from "./pages/Admin";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import NoPage from "./pages/NoPage";
 function App() {
-  const { apiData } = useContext(ApiContext);
-  const { kosar } = useContext(KosarContext);
-
   return (
     <div className="container">
       <header className="">
         <h1>FakeStore Webáruház</h1>
       </header>
-    
-      <main className="row g-5">
-        <section>
-          <UjTermek />
-        </section>
-        <article>
-        {apiData ? <TermekekAdmin termekek={apiData} /> : "Nincs adat"}
-        </article>
-      {/* <aside className="col-lg-4">
-        <h3>Kosaram</h3>
-        <Kosaram kosar={kosar} />
-      </aside>
-        <article className="col-lg-8">
-          {apiData ? <TermekekPublic termekek={apiData} /> : "Nincs adat"}
-        </article> */}
-      </main>
+
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Public />} />
+            <Route path="admin" element={<Admin />} />
+            <Route path="*" element={<NoPage />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
