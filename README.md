@@ -1,70 +1,111 @@
-# Getting Started with Create React App
+# Fake Store webáruház 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A használt végpont dokumentációja: <a href="https://fakestoreapi.com/docs">https://fakestoreapi.com/docs</a>
 
-## Available Scripts
+## Axios saját példány létrehozása és alapbeállítások megadása a MyAxios.js fájlban
 
-In the project directory, you can run:
+    import axios from "axios";
+    export const myAxios = axios.create({
+        baseURL: 'https://fakestoreapi.com',
+        timeout: 10000,
+        headers: {
+        'Content-Type': 'application/json',
+        },
+    });
 
-### `npm start`
+## Context létrehozása az asszinkron hívások kezeléséhez - ApiContext.js
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+    import { createContext, useEffect, useState } from "react";
+    //saját Axios példány használata
+    import { myAxios } from "./MyAxios";
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+    export const ApiContext = createContext("");
 
-### `npm test`
+    export const ApiProvider = ({ children }) => {
+    const [apiData, setApiData] = useState(null); // vagy bármilyen adat, amit az API-tól vársz
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+    /* Az adatok asszinkron hívása axios segítségével */
 
-### `npm run build`
+    const getData = async () => {
+        setLoading(true);
+        setError(null);
+        // saját axios példányt használjuk
+        try {
+        const response = await myAxios.get("/products"); //az alapértelmezett baseURL-ben megadott végpontot kiegészítjük a /products-szal
+        setApiData(response.data); //beállítjuk az apiData statet a beállítófüggvényével.
+        } catch (err) {
+        setError("Hiba történt az adatok lekérésekor.");
+        } finally {
+        setLoading(false);
+        }
+    };
+    /*  A UseEffect hook segítségével asszinkron módon tudunk adatokat kezelni, illetve frissíteni tudjuk a DOM-ot, időzítőket használhatunk. Két argumentuma van. Az első argumentum egy függvény. Amikor a függvény által meghatározott tartalom megváltozik, automatikusan újrarenderelődik az oldalon a vonatkozó tartalom a DOM-ban. 
+    A második paraméter  opcionális, arra használjuk, hogy függőségeket adjunk át a useEffectnek. A tömb eleme lehetnek props, vagy state elemek. A useEffect összehasonlítja a tömbben adott értékek előző és az aktuális állapotát, és csak akkor frissíti az oldalt, ha eltérés mutatkozik a két állapot között. Ezzel elkerülhetjük a végtelen hívásokat és frissítéseket.  */
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+    useEffect(() => {
+        getData(); // Adatok automatikus lekérése, amikor a kontextus betöltődik
+    }, []);
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+    return (
+        <ApiContext.Provider value={{ apiData, getData }}>
+        {children}
+        </ApiContext.Provider>
+    );
+    };
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+# Kosár kezelés - KosarContext.js, Kosaram.js
 
-### `npm run eject`
+    import { createContext, useState } from "react";
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+    export const KosarContext = createContext("");
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+    export const KosarProvider = ({ children }) => {
+    //a kosaram állapotát a kosar lista és a total (összár ) változók fogják leírni, létrehozom a stateket
+    const [kosar, setKosar] = useState([]);
+    const [total, setTotal] = useState(0);
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+    function kosarba(termek) {
+        //kosárba teszem a terméket. 
+        const segedKosar = [...kosar];
+        //Megnézem van-e már ilyen termék a kosárban
+        const vanIlyenTermek = segedKosar.find((elem) => elem.id === termek.id);
+        if (vanIlyenTermek === undefined) {
+        //ha nincs beállítom a termék darabszámát 1-re
+        termek.db = 1;
+        segedKosar.push(termek);
+        } else {
+        // ha van, akkor csak a darabszámot növelem.
+        vanIlyenTermek.db++;
+        }
+        // a beállítófüggvénnyel frissítem a kosarat
+        setKosar([...segedKosar]);
+        console.log(kosar)
+        osszeg()
+    }
+    function dbModosit(id, db){
+        // adott termék darabszámának módosítása
+        const segedKosar = [...kosar];
+        const vanIlyenTermek = segedKosar.find((elem) => elem.id === id);    
+        vanIlyenTermek.db = db;  
+        // ha a darabszám 0, akkor tölöm a kosárból.   
+        if (db===0){
+        let termekIndex=segedKosar.indexOf(vanIlyenTermek)
+        segedKosar.splice(termekIndex,1)
+        
+        }
+        setKosar([...segedKosar]);
+        osszeg()
+    }
+    function osszeg(){
+        //fizetendő összár számítása
+        let szum=kosar.reduce((sv,termek)=>{return sv+termek.price*termek.db;},0)
+        setTotal(szum)
+    }
+    return (
+        <KosarContext.Provider value={{ kosarba, kosar, dbModosit, total }}>
+        {children}
+        </KosarContext.Provider>
+    );
+    };
