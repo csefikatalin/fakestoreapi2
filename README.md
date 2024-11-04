@@ -115,6 +115,7 @@ A használt végpont dokumentációja: <a href="https://fakestoreapi.com/docs">h
 1. A form submit eseményét a form tagre kell írni, nem a submit gombra.
 2. Minden űrlaphoz  tartozik egy state változó, melynek értéke az űrlap beviteli mezőinek tartalma alapján kapja az értékeit. 
 
+    ```javascript
     const [termek, setTermek] = useState({
         title: "",
         price: 10,
@@ -122,12 +123,14 @@ A használt végpont dokumentációja: <a href="https://fakestoreapi.com/docs">h
         category: "",
         image: "",
     });
+    ```
 
 3. Egy általános űrlap elem az alábbi módon néz ki: 
 
-a. Az űrlapelem id-jét az űrlapot leíró state objektum kulcsai alapján érdemes adni. 
-b. Az onChange esemény fogja kezelni  az űrlapmezőbe írt változásokat
+- Az űrlapelem id-jét az űrlapot leíró state objektum kulcsai alapján érdemes adni. 
+- Az onChange esemény fogja kezelni  az űrlapmezőbe írt változásokat
 
+    ```javascript
     <div className="mb-3">
       <label htmlFor="title" className="form-label">
         Név
@@ -144,19 +147,24 @@ b. Az onChange esemény fogja kezelni  az űrlapmezőbe írt változásokat
         value={termek.title}
       />
     </div>
+    ```
 
 4. Az onChange esemény bekövetkeztekor lefutó függvény frissíti a state objektumot.
 
+    ```javascript
     function handleChange(event) {
         const stermek = { ...termek };
         stermek[event.target.id] =
         event.target.id === "price" ? parseFloat(event.target.value) || 0 : event.target.value;
         setTermek({ ...stermek });
     }
+    ```
 
 5. A handleSubmit függvény ellenőrzi az objektum validációját, majd ha valid az adat, akkor elküldi a szerver felé, azaz meghívja az ApiContext-ben létrehozott postData függvényt. 
 
+    ```javascript
     function handleSubmit(event) {
         event.preventDefault() 
-        postData("/products",termek)
+        postData("/products", termek);
     }
+    ```
