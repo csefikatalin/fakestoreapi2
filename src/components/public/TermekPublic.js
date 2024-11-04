@@ -7,7 +7,7 @@ export function TermekPublic(props) {
     <div className="col">
       <div className="card h-100">
         <div className="card-header bg-transparent border-success">
-          <h5 className="card-title">{props.termek.title}</h5>
+          <h5 className="card-title ">{props.termek.title}</h5>
         </div>
         <div className="card-body">
           <ul className="list-group list-group-flush">

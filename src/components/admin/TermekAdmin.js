@@ -18,9 +18,11 @@ export function TermekAdmin(props) {
             </td>
           );
         } else if (kulcs !== "rating") {
+          return <td key={kulcs}> {value}€</td>;
+        } else if (kulcs === "price") {
           return <td key={kulcs}> {value}</td>;
-        }else {
-          return (null)
+        } else {
+          return null;
         }
       })}
 
@@ -49,10 +51,3 @@ export function TermekAdmin(props) {
 }
 
 export default TermekAdmin;
-/*   <td>{props.termek.title}</td>
-      <td>
-        <img className="admintermekkep" src={props.termek.image} alt="" />
-      </td>
-      <td>{props.termek.description}</td>
-
-      <td>{props.termek.price}</td> */
