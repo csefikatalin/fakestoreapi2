@@ -55,7 +55,7 @@ A használt végpont dokumentációja: <a href="https://fakestoreapi.com/docs">h
     );
     };
 
-# Kosár kezelés - KosarContext.js, Kosaram.js
+## Kosár kezelés - KosarContext.js, Kosaram.js
 
     import { createContext, useState } from "react";
 
@@ -109,3 +109,54 @@ A használt végpont dokumentációja: <a href="https://fakestoreapi.com/docs">h
         </KosarContext.Provider>
     );
     };
+
+## Űrlap létrehozása - Ujtermek.js
+
+1. a form submit eseményét a form tagre kell írni, nem a submit gombra.
+2. Minden űrlaphoz  tartozik egy state változó, melynek értéke az űrlap beviteli mezőinek tartalma alapján kapja az értékeit. 
+
+    const [termek, setTermek] = useState({
+        title: "",
+        price: 10,
+        description: "",
+        category: "",
+        image: "",
+    });
+
+3. Egy általános űrlap elem az alábbi módon néz ki: 
+
+    a. Az űrlapelem id-jét az űrlapot leíró state objektum kulcsai alapján érdemes adni. 
+    b. Az onChange esemény fogja kezelni  az űrlapmezőbe írt változásokat
+
+      <div className="mb-3">
+        <label htmlFor="title" className="form-label">
+          Név
+        </label>
+        <input
+          type="text"
+          className="form-control"
+          id="title"
+          required
+          placeholder="Termék neve"
+          onChange={(event) => {
+            handleChange(event);
+          }}
+          value={termek.title}
+        />
+      </div>
+
+4. Az onChange esemény bekövetkeztekor lefutó függvény frissíti a state objektumot.
+
+    function handleChange(event) {
+        const stermek = { ...termek };
+        stermek[event.target.id] =
+        event.target.id === "price" ? parseFloat(event.target.value) || 0 : event.target.value;
+        setTermek({ ...stermek });
+    }
+
+5. A handleSubmit függvény ellenőrzi az objektum validációját, majd ha valid az adat, akkor elküldi a szerver felé, azaz meghívja az ApiContext-ben létrehozott postData függvényt. 
+
+    function handleSubmit(event) {
+        event.preventDefault() 
+        postData("/products",termek)
+    }

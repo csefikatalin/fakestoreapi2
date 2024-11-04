@@ -19,14 +19,13 @@ function UjTermek() {
         ? parseFloat(event.target.value) || 0
         : event.target.value;
 
-    console.log(stermek);
     setTermek({ ...stermek });
   }
   function handleSubmit(event) {
     event.preventDefault() 
-    console.log(termek)
     postData("/products",termek)
   }
+  
   return (
     <form  onSubmit={(event) => {
       
@@ -105,23 +104,4 @@ function UjTermek() {
 }
 
 export default UjTermek;
-{
-  /*      <div className="mb-3">
-        
-        <select className="form-select" aria-label="kategória választék" id="category"  value={termek.category}>
-        <option value="0">Válassz kategóriát! </option>
-        <option value="1">One</option>
-        <option value="2">Two</option>
-        <option value="3">Three</option>
-      </select>
-      </div> 
-      
-     
-      
-      <div className="mb-3">
-        <label htmlFor="image" className="form-label">
-          Válassz képet!
-        </label>
-        <input className="form-control" type="file" id="image" />
-      </div>*/
-}
+
