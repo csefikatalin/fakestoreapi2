@@ -4,6 +4,7 @@ import { ApiContext } from "./contexts/ApiContext";
 import Kosaram from "./components/public/Kosaram";
 import { KosarContext } from "./contexts/KosarContext";
 import TermekekAdmin from "./components/admin/TermekekAdmin";
+import UjTermek from "./components/admin/UjTermek";
 
 function App() {
   const { apiData } = useContext(ApiContext);
@@ -16,6 +17,9 @@ function App() {
       </header>
     
       <main className="row g-5">
+        <section>
+          <UjTermek />
+        </section>
         <article>
         {apiData ? <TermekekAdmin termekek={apiData} /> : "Nincs adat"}
         </article>
