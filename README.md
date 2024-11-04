@@ -112,7 +112,7 @@ A használt végpont dokumentációja: <a href="https://fakestoreapi.com/docs">h
 
 ## Űrlap létrehozása - Ujtermek.js
 
-1. a form submit eseményét a form tagre kell írni, nem a submit gombra.
+1. A form submit eseményét a form tagre kell írni, nem a submit gombra.
 2. Minden űrlaphoz  tartozik egy state változó, melynek értéke az űrlap beviteli mezőinek tartalma alapján kapja az értékeit. 
 
     const [termek, setTermek] = useState({
@@ -125,25 +125,25 @@ A használt végpont dokumentációja: <a href="https://fakestoreapi.com/docs">h
 
 3. Egy általános űrlap elem az alábbi módon néz ki: 
 
-    a. Az űrlapelem id-jét az űrlapot leíró state objektum kulcsai alapján érdemes adni. 
-    b. Az onChange esemény fogja kezelni  az űrlapmezőbe írt változásokat
+a. Az űrlapelem id-jét az űrlapot leíró state objektum kulcsai alapján érdemes adni. 
+b. Az onChange esemény fogja kezelni  az űrlapmezőbe írt változásokat
 
-      <div className="mb-3">
-        <label htmlFor="title" className="form-label">
-          Név
-        </label>
-        <input
-          type="text"
-          className="form-control"
-          id="title"
-          required
-          placeholder="Termék neve"
-          onChange={(event) => {
-            handleChange(event);
-          }}
-          value={termek.title}
-        />
-      </div>
+    <div className="mb-3">
+      <label htmlFor="title" className="form-label">
+        Név
+      </label>
+      <input
+        type="text"
+        className="form-control"
+        id="title"
+        required
+        placeholder="Termék neve"
+        onChange={(event) => {
+          handleChange(event);
+        }}
+        value={termek.title}
+      />
+    </div>
 
 4. Az onChange esemény bekövetkeztekor lefutó függvény frissíti a state objektumot.
 
