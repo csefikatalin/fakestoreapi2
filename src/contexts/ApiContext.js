@@ -6,18 +6,19 @@ export const ApiContext = createContext("");
 
 export const ApiProvider = ({ children }) => {
   const [apiData, setApiData] = useState(null); // vagy bármilyen adat, amit az API-tól vársz
+  const [kategoriaData, setKategoriaData] = useState([]); // vagy bármilyen adat, amit az API-tól vársz
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   /* Az adatok asszinkron hívása axios segítségével */
 
-  const getData = async (vegpont) => {
+  const getData = async (vegpont,fv) => {
     setLoading(true);
     setError(null);
     // saját axios példányt használjuk
     try {
       const response = await myAxios.get(vegpont); //az alapértelmezett baseURL-ben megadott végpontot kiegészítjük a /products-szal
-      setApiData(response.data); //beállítjuk az apiData statet a beállítófüggvényével.
+      fv(response.data); //beállítjuk az apiData statet a beállítófüggvényével.
     } catch (err) {
       setError("Hiba történt az adatok lekérésekor.");
     } finally {
@@ -40,11 +41,12 @@ export const ApiProvider = ({ children }) => {
  A második paraméter  opcionális, arra használjuk, hogy függőségeket adjunk át a useEffectnek. A tömb eleme lehetnek props, vagy state elemek. A useEffect összehasonlítja a tömbben adott értékek előző és az aktuális állapotát, és csak akkor frissíti az oldalt, ha eltérés mutatkozik a két állapot között. Ezzel elkerülhetjük a végtelen hívásokat és frissítéseket.  */
 
   useEffect(() => {
-    getData("/products"); // Adatok automatikus lekérése, amikor a kontextus betöltődik
+    getData("/products",setApiData); // Adatok automatikus lekérése, amikor a kontextus betöltődik
+    getData("/products/categories",setKategoriaData); // Adatok automatikus lekérése, amikor a kontextus betöltődik
   }, []);
 
   return (
-    <ApiContext.Provider value={{ apiData, getData, postData }}>
+    <ApiContext.Provider value={{ apiData, getData, postData,kategoriaData }}>
       {children}
     </ApiContext.Provider>
   );

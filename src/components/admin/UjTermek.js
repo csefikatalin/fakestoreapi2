@@ -2,7 +2,8 @@ import React, { useContext, useState } from "react";
 import { ApiContext } from "../../contexts/ApiContext";
 
 function UjTermek() {
-  const {postData} =useContext(ApiContext)
+  const { postData, kategoriaData } = useContext(ApiContext);
+  console.log(kategoriaData)
   const [termek, setTermek] = useState({
     title: "",
     price: 10,
@@ -18,19 +19,20 @@ function UjTermek() {
       event.target.id === "price"
         ? parseFloat(event.target.value) || 0
         : event.target.value;
-
     setTermek({ ...stermek });
+   
   }
   function handleSubmit(event) {
-    event.preventDefault() 
-    postData("/products",termek)
+    event.preventDefault();
+    postData("/products", termek);
   }
-  
+
   return (
-    <form  onSubmit={(event) => {
-      
-      handleSubmit(event);
-    }}>
+    <form
+      onSubmit={(event) => {
+        handleSubmit(event);
+      }}
+    >
       <div className="mb-3">
         <label htmlFor="title" className="form-label">
           Név
@@ -65,6 +67,29 @@ function UjTermek() {
         />
       </div>
       <div className="mb-3">
+        <label htmlFor="category" className="form-label">
+          Kategória
+        </label>
+        <select
+        required
+          id="category"
+          className="form-select"
+          value={termek.category}
+          onChange={handleChange}
+        >
+          <option value="">Válassz kategóriát!</option>
+          {
+             kategoriaData.map((elem, index)=>{
+              return (<option value={elem} key={index}>{elem}</option>)
+            })
+          } 
+          
+          
+        
+       
+        </select>
+      </div>
+      <div className="mb-3">
         <label htmlFor="description" className="form-label">
           Leírás
         </label>
@@ -92,11 +117,7 @@ function UjTermek() {
           }}
         />
       </div>
-      <button
-        type="submit"
-       
-        className="btn btn-primary"
-      >
+      <button type="submit" className="btn btn-primary">
         Küld
       </button>
     </form>
@@ -104,4 +125,3 @@ function UjTermek() {
 }
 
 export default UjTermek;
-
