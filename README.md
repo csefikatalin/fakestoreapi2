@@ -4,6 +4,7 @@ A használt végpont dokumentációja: <a href="https://fakestoreapi.com/docs">h
 
 ## Axios saját példány létrehozása és alapbeállítások megadása a MyAxios.js fájlban
 
+    ``` javascript
     import axios from "axios";
     export const myAxios = axios.create({
         baseURL: 'https://fakestoreapi.com',
@@ -12,9 +13,11 @@ A használt végpont dokumentációja: <a href="https://fakestoreapi.com/docs">h
         'Content-Type': 'application/json',
         },
     });
+    ```
 
 ## Context létrehozása az asszinkron hívások kezeléséhez - ApiContext.js
 
+    ``` javascript
     import { createContext, useEffect, useState } from "react";
     //saját Axios példány használata
     import { myAxios } from "./MyAxios";
@@ -54,8 +57,11 @@ A használt végpont dokumentációja: <a href="https://fakestoreapi.com/docs">h
         </ApiContext.Provider>
     );
     };
+    ```
 
 ## Kosár kezelés - KosarContext.js, Kosaram.js
+
+    ```javascript
 
     import { createContext, useState } from "react";
 
@@ -109,6 +115,7 @@ A használt végpont dokumentációja: <a href="https://fakestoreapi.com/docs">h
         </KosarContext.Provider>
     );
     };
+    ```
 
 ## Űrlap létrehozása - Ujtermek.js
 
