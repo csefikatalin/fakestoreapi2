@@ -11,12 +11,12 @@ export const ApiProvider = ({ children }) => {
 
   /* Az adatok asszinkron hívása axios segítségével */
 
-  const getData = async () => {
+  const getData = async (vegpont) => {
     setLoading(true);
     setError(null);
     // saját axios példányt használjuk
     try {
-      const response = await myAxios.get("/products"); //az alapértelmezett baseURL-ben megadott végpontot kiegészítjük a /products-szal
+      const response = await myAxios.get(vegpont); //az alapértelmezett baseURL-ben megadott végpontot kiegészítjük a /products-szal
       setApiData(response.data); //beállítjuk az apiData statet a beállítófüggvényével.
     } catch (err) {
       setError("Hiba történt az adatok lekérésekor.");
@@ -28,7 +28,7 @@ export const ApiProvider = ({ children }) => {
  A második paraméter  opcionális, arra használjuk, hogy függőségeket adjunk át a useEffectnek. A tömb eleme lehetnek props, vagy state elemek. A useEffect összehasonlítja a tömbben adott értékek előző és az aktuális állapotát, és csak akkor frissíti az oldalt, ha eltérés mutatkozik a két állapot között. Ezzel elkerülhetjük a végtelen hívásokat és frissítéseket.  */
 
   useEffect(() => {
-    getData(); // Adatok automatikus lekérése, amikor a kontextus betöltődik
+    getData("/products?limit=3"); // Adatok automatikus lekérése, amikor a kontextus betöltődik
   }, []);
 
   return (

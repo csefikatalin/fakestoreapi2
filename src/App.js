@@ -3,6 +3,7 @@ import TermekekPublic from "./components/public/TermekekPublic";
 import { ApiContext } from "./contexts/ApiContext";
 import Kosaram from "./components/public/Kosaram";
 import { KosarContext } from "./contexts/KosarContext";
+import TermekekAdmin from "./components/admin/TermekekAdmin";
 
 function App() {
   const { apiData } = useContext(ApiContext);
@@ -15,13 +16,16 @@ function App() {
       </header>
     
       <main className="row g-5">
-      <aside className="col-lg-4">
+        <article>
+        {apiData ? <TermekekAdmin termekek={apiData} /> : "Nincs adat"}
+        </article>
+      {/* <aside className="col-lg-4">
         <h3>Kosaram</h3>
         <Kosaram kosar={kosar} />
       </aside>
         <article className="col-lg-8">
           {apiData ? <TermekekPublic termekek={apiData} /> : "Nincs adat"}
-        </article>
+        </article> */}
       </main>
     </div>
   );
