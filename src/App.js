@@ -1,23 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import { useContext } from "react";
+import TermekekPublic from "./components/public/TermekekPublic";
+import { ApiContext } from "./contexts/ApiContext";
+import Kosaram from "./components/public/Kosaram";
+import { KosarContext } from "./contexts/KosarContext";
 
 function App() {
+  const { apiData } = useContext(ApiContext);
+  const { kosar } = useContext(KosarContext);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+    <div className="container">
+      <header className="">
+        <h1>FakeStore Webáruház</h1>
       </header>
+    
+      <main className="row g-5">
+      <aside className="col-lg-4">
+        <h3>Kosaram</h3>
+        <Kosaram kosar={kosar} />
+      </aside>
+        <article className="col-lg-8">
+          {apiData ? <TermekekPublic termekek={apiData} /> : "Nincs adat"}
+        </article>
+      </main>
     </div>
   );
 }
