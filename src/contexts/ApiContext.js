@@ -11,7 +11,7 @@ export const ApiProvider = ({ children }) => {
   const [error, setError] = useState(null);
 
   /* Az adatok asszinkron hívása axios segítségével */
-
+  /* 
   const getData = async (vegpont,fv) => {
     setLoading(true);
     setError(null);
@@ -24,7 +24,35 @@ export const ApiProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }; */
+  function getData(vegpont, fv) {
+    setLoading(true);
+    setError(null);
+    // saját axios példányt használjuk
+    /*    try {
+      const response = await myAxios.get(vegpont); //az alapértelmezett baseURL-ben megadott végpontot kiegészítjük a /products-szal
+      fv(response.data); //beállítjuk az apiData statet a beállítófüggvényével.
+    } catch (err) {
+      setError("Hiba történt az adatok lekérésekor.");
+    } finally {
+      setLoading(false);
+    } */
+    myAxios
+      .get(vegpont)
+      .then(function (response) {
+        // handle success
+        fv(response.data);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+        setError("Hiba történt az adatok lekérésekor.");
+      })
+      .finally(function () {
+        // always executed
+        setLoading(false);
+      });
+  }
   const postData = async (vegpont, data) => {
     setLoading(true);
     setError(null);
@@ -41,12 +69,18 @@ export const ApiProvider = ({ children }) => {
  A második paraméter  opcionális, arra használjuk, hogy függőségeket adjunk át a useEffectnek. A tömb eleme lehetnek props, vagy state elemek. A useEffect összehasonlítja a tömbben adott értékek előző és az aktuális állapotát, és csak akkor frissíti az oldalt, ha eltérés mutatkozik a két állapot között. Ezzel elkerülhetjük a végtelen hívásokat és frissítéseket.  */
 
   useEffect(() => {
-    getData("/products",setApiData); // Adatok automatikus lekérése, amikor a kontextus betöltődik
-    getData("/products/categories",setKategoriaData); // Adatok automatikus lekérése, amikor a kontextus betöltődik
+    getData("/products", setApiData); // Adatok automatikus lekérése, amikor a kontextus betöltődik
+    getData("/products/categories", setKategoriaData); // Adatok automatikus lekérése, amikor a kontextus betöltődik
   }, []);
-
+  function szures(szuroErtek) {
+    let vegpont="/products/category/"+szuroErtek
+    getData(vegpont, setApiData);
+    console.log(vegpont);
+  }
   return (
-    <ApiContext.Provider value={{ apiData, getData, postData,kategoriaData }}>
+    <ApiContext.Provider
+      value={{ apiData, getData, postData, kategoriaData, szures }}
+    >
       {children}
     </ApiContext.Provider>
   );
